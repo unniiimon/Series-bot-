@@ -1,4 +1,6 @@
 from aiohttp import web
+import asyncio
+from handlers.bot import run_bot  # Import from folder
 
 routes = web.RouteTableDef()
 
@@ -6,12 +8,12 @@ routes = web.RouteTableDef()
 async def home(request):
     return web.Response(text="Bot is Running")
 
-
-def run():
+async def start_services():
+    loop = asyncio.get_event_loop()
+    loop.create_task(run_bot())
     app = web.Application()
     app.add_routes(routes)
-    web.run_app(app, port=8080)
-
+    return app
 
 if __name__ == "__main__":
-    run()
+    web.run_app(start_services(), port=8080)
