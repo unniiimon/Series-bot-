@@ -1,6 +1,6 @@
-from aiohttp import web
 import asyncio
-from handlers.bot import run_bot  # Import from folder
+from aiohttp import web
+from handlers.bot import bot  # Import your Pyrogram bot instance
 
 routes = web.RouteTableDef()
 
@@ -9,11 +9,16 @@ async def home(request):
     return web.Response(text="Bot is Running")
 
 async def start_services():
-    loop = asyncio.get_event_loop()
-    loop.create_task(run_bot())
+    await bot.start()
+    print("Bot started")
     app = web.Application()
     app.add_routes(routes)
-    return app
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, "0.0.0.0", 8080)
+    await site.start()
+    print("Web server started on http://0.0.0.0:8080")
 
-if __name__ == "__main__":
-    web.run_app(start_services(), port=8080)
+loop = asyncio.get_event_loop()
+loop.run_until_complete(start_services())
+loop.run_forever()
