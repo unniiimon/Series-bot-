@@ -1,10 +1,17 @@
-from pyrogram import Client
-from config import API_ID, API_HASH, BOT_TOKEN
-from handlers import admin, user
+from aiohttp import web
 
-app = Client("series_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
+routes = web.RouteTableDef()
 
-admin.register_admin_handlers(app)
-user.register_user_handlers(app)
+@routes.get("/")
+async def home(request):
+    return web.Response(text="Bot is Running")
 
-app.run()
+
+def run():
+    app = web.Application()
+    app.add_routes(routes)
+    web.run_app(app, port=8080)
+
+
+if __name__ == "__main__":
+    run()
