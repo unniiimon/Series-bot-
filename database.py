@@ -1,6 +1,13 @@
-from pymongo import MongoClient
-from config import MONGO_URI
+from motor.motor_asyncio import AsyncIOMotorClient
+from config import MONGO_URL
 
-client = MongoClient(MONGO_URI)
-db = client.series_bot
-series_col = db.series
+client = AsyncIOMotorClient(MONGO_URL)
+db = client.seriesbot
+
+
+def get_series_collection():
+    return db.series
+
+
+def get_user_collection():
+    return db.users
