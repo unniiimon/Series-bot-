@@ -60,3 +60,7 @@ async def handle_channel_upload(client, message: Message):
         await series_col.update_one({"name": name}, {"$set": {"data": existing["data"]}})
     else:
         await series_col.insert_one({"name": name, "data": {season: {quality: [doc_id]}}})
+
+async def run_bot():
+    await bot.start()
+        
